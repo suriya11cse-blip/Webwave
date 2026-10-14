@@ -1,0 +1,103 @@
+WEBWAVE - About Us
+==================
+WEBWAVE is a smart platform that provides real-world opportunities, industry-oriented courses, and skill development programs. We help students and job seekers connect with local opportunities, internships, part-time jobs, and career guidance. All services are 100% free for job seekers.
+
+WEBWAVE Core Service Domains
+=============================
+1. Real-World Opportunities: Internship Programs, Part-Time Job Support, Career Mentoring & Counselling.
+2. Demand-Driven Digital Skills: Content Creation and Canva Designing.
+3. Career & Professional Development: Practical skill-building and industry-oriented opportunities.
+4. Advanced Technologies: AI, Robotics & Drone Basics.
+5. Medical Coding Course.
+
+WEBWAVE Technical Courses
+=========================
+Web & Application Development:
+- Full stack web development (IOT Networks, MERN stacks, etc.)
+- Mobile application development (Flutter, MIT App Inventor, Android Studio, etc.)
+- Docker and its applications
+- Docker Containers & Kubernetes
+- All Programming Languages (C, C++, Java, JavaScript, Python, PHP, etc.)
+
+Industry 4.0 (IOT & Robotics):
+- Internet Of Things (IOT, IIOT, CIOT & Applications)
+- Embedded Systems (PCB Design, Mastering Microcontrollers & its peripherals)
+- Robotics (PCB Design, Mastering Microcontrollers & its peripherals)
+
+AI & ML, Generative AI & Apps:
+- Artificial Intelligence & Machine Learning
+- Generative AI & Apps
+
+DV & CV:
+- Data Visualization & Computer Vision
+
+Computing Applications:
+- EDCE & Cloud Computing Applications, etc.
+
+Reality Based Applications:
+- Augmented Reality (Unity & Vuforia Engine)
+- Virtual Reality (Unity, Meta Oculus, etc.)
+- Mixed Reality (Unity, Meta, Oculus, Vuforia, etc.)
+
+Design Based Applications:
+- UI/UX Design (Figma, Adobe XD, Sketch, etc.)
+- Graphic Design (Photoshop, Canva, Illustrator, etc.)
+- 3D & Animation (After Effects, Blender, Unity Engine, etc.)
+- CADD Design (AutoDesk Applications, Creo, Revit, MVP, Ansys, etc.)
+- Additive Manufacturing (Cura, Blender, MSF Adams, Fusion 360, NX CAM, etc.)
+
+Web 3.0 Applications:
+- Blockchain
+- Cryptocurrency & NFT
+- Cyber Security
+- Fintech & Management Applications
+
+WEBWAVE Non-Technical Courses
+=============================
+- Entrepreneurship Programs
+- Entrepreneurship and Startup Development Program
+- Digital Marketing
+- Design Thinking
+- Marketing & Financing
+- Intellectual Property Rights (IPR)
+- Supply Chain Management and Logistics
+- Business Plan & Development
+- Branding & Development
+- Youth MBA Program
+- Business Analytics & Data Scientist
+- Technology Integrated Management Programs (TIMP)
+
+Note: Courses will be available as per the requirements from the college.
+
+WEBWAVE Part-Time Opportunities
+================================
+We provide part-time jobs to the students who are willing to earn and survive independently.
+
+Current Part-Time Partners (Kovilpatti):
+1. Bombay Sweets, Kovilpatti
+2. Jeyaraj & Co, Kovilpatti
+3. Silver Stone, Kovilpatti
+
+WEBWAVE Laboratory Internships
+===============================
+We provide laboratory internships to life science students with certificates.
+
+Partner Labs:
+1. Aarthi Laboratory
+2. Narbhavi Diagnostic Centre
+
+WEBWAVE Industrial Knowledge Program
+=====================================
+For engineering students, we provide AI-related knowledge and courses with industry-oriented, hands-on training.
+
+WEBWAVE Contact & How to Join
+==============================
+Each service has its own WhatsApp group. Users can sign up on the website, login, browse opportunities, and scan the QR code to join the relevant WhatsApp group for direct connection.
+
+WEBWAVE Pricing
+===============
+WEBWAVE is 100% free for job seekers. Course fees depend on college requirements — contact via WhatsApp group for exact details.
+
+WEBWAVE EPF/PF Information
+===========================
+For EPF (Employee Provident Fund), users should only use the official EPFO portal. Never share personal data in chat.

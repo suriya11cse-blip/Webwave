@@ -1,0 +1,13 @@
+venv/
+__pycache__/
+*.pyc
+.env
+database.db
+*.db
+*.sqlite
+app/vector_store/
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

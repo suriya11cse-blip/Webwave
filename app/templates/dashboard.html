@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Jobs — WEBWAVE{% endblock %}
+
+{% block content %}
+<script>
+if (!localStorage.getItem('token')) {
+  window.location.href = '/login';
+}
+</script>
+
+<section class="dashboard">
+  <div class="app-header">
+    <div>
+      <div class="hbrand">WEB<span class="grad">WAVE</span></div>
+      <div class="htitle">Smart Job Platform</div>
+    </div>
+    <div class="user-badge">
+      <span id="userName">Guest</span>
+      <button onclick="logout()" class="logout-btn">Logout</button>
+    </div>
+  </div>
+
+  <div class="sec-lbl">Available Opportunities</div>
+
+  <div class="jobs-grid">
+    <div class="job-card" onclick="location.href='/job/digital'">
+      <div class="cimg">
+        <img src="https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=800&q=80" alt="Digital Skills">
+        <div class="cov"></div>
+      </div>
+      <div class="cbody">
+        <span class="jtag tt">Tech</span>
+        <h3>Digital Skills</h3>
+        <p>Learn &amp; earn with digital marketing, social media, and online tools.</p>
+        <div class="cfoot"><span class="cvbtn">View →</span></div>
+      </div>
+    </div>
+
+    <div class="job-card" onclick="location.href='/job/mehndi'">
+      <div class="cimg">
+        <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80" alt="Mehndi Art">
+        <div class="cov"></div>
+      </div>
+      <div class="cbody">
+        <span class="jtag ta">Art</span>
+        <h3>Mehndi Art</h3>
+        <p>High-demand wedding and festival mehndi artist opportunities near you.</p>
+        <div class="cfoot"><span class="cvbtn">View →</span></div>
+      </div>
+    </div>
+
+    <div class="job-card" onclick="location.href='/job/internship'">
+      <div class="cimg">
+        <img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=800&q=80" alt="Lab Internship">
+        <div class="cov"></div>
+      </div>
+      <div class="cbody">
+        <span class="jtag ti">Internship</span>
+        <h3>Laboratory Internship</h3>
+        <p>Hands-on science and research internship in a professional lab setting.</p>
+        <div class="cfoot"><span class="cvbtn">View →</span></div>
+      </div>
+    </div>
+
+    <div class="job-card" onclick="location.href='/job/guidance'">
+      <div class="cimg">
+        <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=80" alt="Institute Guidance">
+        <div class="cov"></div>
+      </div>
+      <div class="cbody">
+        <span class="jtag tg">Guidance</span>
+        <h3>Institute Guidance</h3>
+        <p>Get mentored by institute professionals to boost your career path.</p>
+        <div class="cfoot"><span class="cvbtn">View →</span></div>
+      </div>
+    </div>
+
+    <div class="job-card" onclick="location.href='/job/skilldev'">
+      <div class="cimg">
+        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80" alt="Skill Development">
+        <div class="cov"></div>
+      </div>
+      <div class="cbody">
+        <span class="jtag td">Development</span>
+        <h3>Skill Development</h3>
+        <p>Join workshops and training programs to develop job-ready skills fast.</p>
+        <div class="cfoot"><span class="cvbtn">View →</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+  var name = localStorage.getItem('name');
+  if (name) document.getElementById('userName').innerText = name;
+});
+</script>
+{% endblock %}

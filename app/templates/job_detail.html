@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Job Details — WEBWAVE{% endblock %}
+
+{% block content %}
+<script>
+if (!localStorage.getItem('token')) {
+  window.location.href = '/login';
+}
+</script>
+
+<section class="job-detail">
+  <div class="inner">
+    <button class="back-btn" onclick="location.href='/dashboard'">← Back to Jobs</button>
+
+    <div class="dimgw">
+      <img id="jobImg" src="" alt="">
+      <div class="dimgo"></div>
+    </div>
+
+    <div class="dbox">
+      <span id="dtag" class="jtag"></span>
+      <h2 id="jobTitle"></h2>
+      <p class="ddesc" id="jobDesc"></p>
+
+      <div class="qr-card">
+        <div class="qrt">📷 Scan to Join WhatsApp Group</div>
+        <div id="qrwrap"><div id="qrcode"></div></div>
+        <div class="qrh" id="qrLabel"></div>
+      </div>
+
+      <button class="wa-btn" id="applyBtn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/>
+        </svg>
+        Join WhatsApp Group
+      </button>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+var jobKey = "{{ job_key }}";
+
+var jobs = {
+  digital: {
+    title: "Digital Skills", tag: "Tech", tc: "tt",
+    img: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=800&q=80",
+    desc: "Develop in-demand digital skills including social media management, online marketing, and content creation.",
+    link: "https://chat.whatsapp.com/CEnAvjp16KJ5YhRkamxQ8Z?mode=gi_t",
+    label: "Digital Skills - WhatsApp Group"
+  },
+  mehndi: {
+    title: "Mehndi Art", tag: "Art", tc: "ta",
+    img: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80",
+    desc: "Work as a mehndi artist for weddings, festivals, and cultural events. High demand across Chennai.",
+    link: "https://chat.whatsapp.com/DCVPaFjBrQeHyvwpHs7gZz?mode=gi_t",
+    label: "Mehndi Art - WhatsApp Group"
+  },
+  internship: {
+    title: "Laboratory Internship", tag: "Internship", tc: "ti",
+    img: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=800&q=80",
+    desc: "Gain real-world lab experience. Ideal for science students seeking hands-on practice.",
+    link: "https://chat.whatsapp.com/KbDNiEhxSOS9IAQzjGREJ4?mode=gi_t",
+    label: "Lab Internship - WhatsApp Group"
+  },
+  guidance: {
+    title: "Institute Guidance", tag: "Guidance", tc: "tg",
+    img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=80",
+    desc: "Get career counselling and mentorship from experienced institute professionals.",
+    link: "https://chat.whatsapp.com/HgE56u0f63o7HX2pi3q80l?mode=gi_t",
+    label: "Institute Guidance - WhatsApp Group"
+  },
+  skilldev: {
+    title: "Skill Development", tag: "Development", tc: "td",
+    img: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80",
+    desc: "Join programs covering communication, technical skills, and employability.",
+    link: "https://chat.whatsapp.com/BLziCmLSOxMBVKOf6H5MfD?mode=gi_t",
+    label: "Skill Development - WhatsApp Group"
+  }
+};
+
+var j = jobs[jobKey] || jobs.digital;
+
+document.getElementById('jobImg').src = j.img;
+document.getElementById('jobTitle').innerText = j.title;
+document.getElementById('jobDesc').innerText = j.desc;
+document.getElementById('qrLabel').innerText = j.label;
+
+var dt = document.getElementById('dtag');
+dt.innerText = j.tag;
+dt.className = 'jtag ' + j.tc;
+
+var qel = document.getElementById('qrcode');
+qel.innerHTML = '';
+new QRCode(qel, {
+  text: j.link, width: 180, height: 180,
+  colorDark: "#000000", colorLight: "#ffffff",
+  correctLevel: QRCode.CorrectLevel.H
+});
+
+document.getElementById('applyBtn').onclick = function() {
+  window.open(j.link, '_blank');
+};
+</script>
+{% endblock %}

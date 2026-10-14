@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: webwave
+    env: python
+    region: singapore
+    plan: free
+    branch: main
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: SECRET_KEY
+        value: webwave-super-secret-key-change-in-production-12345
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 1440
+      - key: DATABASE_URL
+        value: sqlite:///./data/database.db
+      - key: GROQ_API_KEY
+        sync: false
+    disk:
+      name: webwave-data
+      mountPath: /data
+      sizeGB: 1
