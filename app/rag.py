@@ -1,35 +1,32 @@
 import os
 import chromadb
 from dotenv import load_dotenv
-from sentence_transformers import SentenceTransformer
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 load_dotenv()
 
 KNOWLEDGE_FILE = "app/data/webwave_knowledge.txt"
 VECTOR_DIR = "app/vector_store"
 COLLECTION_NAME = "webwave_kb"
-EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 
-_model = None
 _collection = None
 _client = None
+_vectorizer = None
+_chunks_cache = []
 
 
-def _get_embedder():
-    global _model
-    if _model is None:
-        print("[*] Loading embedding model...")
-        _model = SentenceTransformer(EMBEDDING_MODEL)
-        print("[OK] Embedding model loaded")
-    return _model
+def _get_vectorizer():
+    global _vectorizer
+    if _vectorizer is None:
+        _vectorizer = TfidfVectorizer(
+            max_features=500,
+            stop_words='english',
+            ngram_range=(1, 2)
+        )
+    return _vectorizer
 
 
-def _embed(text: str):
-    model = _get_embedder()
-    return model.encode(text).tolist()
-
-
-def _chunk_text(text: str, chunk_size: int = 800):
+def _chunk_text(text: str, chunk_size: int = 500):
     paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
     chunks = []
     current = ""
@@ -46,7 +43,7 @@ def _chunk_text(text: str, chunk_size: int = 800):
 
 
 def _get_collection(force_rebuild: bool = False):
-    global _collection, _client
+    global _collection, _client, _chunks_cache
 
     if _collection is not None and not force_rebuild:
         return _collection
@@ -69,6 +66,11 @@ def _get_collection(force_rebuild: bool = False):
         if _collection.count() == 0:
             raise ValueError("Empty")
         print(f"[OK] Loaded collection ({_collection.count()} chunks)")
+
+        # Load chunks from vector store
+        results = _collection.get(include=["documents"])
+        _chunks_cache = results.get("documents", [])
+
     except Exception:
         print("[*] Building new vector store...")
         with open(KNOWLEDGE_FILE, "r", encoding="utf-8") as f:
@@ -81,30 +83,50 @@ def _get_collection(force_rebuild: bool = False):
             metadata={"hnsw:space": "cosine"}
         )
 
+        # Use TF-IDF embeddings (lightweight!)
+        vectorizer = _get_vectorizer()
+        embeddings = vectorizer.fit_transform(chunks).toarray().tolist()
+
         for i, chunk in enumerate(chunks):
-            emb = _embed(chunk)
             _collection.add(
                 documents=[chunk],
-                embeddings=[emb],
+                embeddings=[embeddings[i]],
                 ids=[f"chunk_{i}"]
             )
+        _chunks_cache = chunks
         print(f"[OK] Vector store built ({_collection.count()} chunks)")
 
     return _collection
 
 
-def get_relevant_context(query: str, k: int = 4) -> str:
+def get_relevant_context(query: str, k: int = 3) -> str:
     collection = _get_collection()
     if collection is None:
         return ""
     try:
-        query_emb = _embed(query)
-        results = collection.query(
-            query_embeddings=[query_emb],
-            n_results=k,
-            include=["documents"]
-        )
-        docs = results.get("documents", [[]])[0]
+        # Keyword-based search (TF-IDF)
+        if not _chunks_cache:
+            return ""
+
+        vectorizer = _get_vectorizer()
+        # Fit on chunks if not fit
+        if not hasattr(vectorizer, 'vocabulary_') or not vectorizer.vocabulary_:
+            vectorizer.fit(_chunks_cache)
+
+        query_vec = vectorizer.transform([query])
+        # Get top k chunks by simple keyword matching
+        query_words = set(query.lower().split())
+
+        scored = []
+        for i, chunk in enumerate(_chunks_cache):
+            chunk_words = set(chunk.lower().split())
+            overlap = len(query_words & chunk_words)
+            scored.append((overlap, i))
+
+        scored.sort(reverse=True)
+        top_indices = [i for _, i in scored[:k]]
+
+        docs = [_chunks_cache[i] for i in top_indices]
         return "\n\n---\n\n".join(docs) if docs else ""
     except Exception as e:
         print(f"[!] RAG error: {e}")
