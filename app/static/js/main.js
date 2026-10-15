@@ -16,6 +16,7 @@ function logout() {
   window.location.href = '/login';
 }
 
+// ---------- NAV + CHATBOT VISIBILITY ----------
 function renderNav() {
   var navLinks = document.getElementById('navLinks');
   var chatToggle = document.getElementById('chatToggle');
@@ -23,9 +24,6 @@ function renderNav() {
 
   if (isLoggedIn()) {
     // ✅ LOGGED IN
-    document.body.classList.add('logged-in');
-    document.body.classList.remove('guest');
-
     if (navLinks) {
       var userName = getUserName() || 'User';
       navLinks.innerHTML =
@@ -36,9 +34,6 @@ function renderNav() {
     if (chatToggle) chatToggle.style.display = 'flex';
   } else {
     // ❌ GUEST
-    document.body.classList.add('guest');
-    document.body.classList.remove('logged-in');
-
     if (navLinks) navLinks.innerHTML = '';
     if (chatToggle) chatToggle.style.display = 'none';
     if (chatBox) {

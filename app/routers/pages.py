@@ -7,8 +7,9 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/", response_class=HTMLResponse)
-def root():
-    return RedirectResponse(url="/login")
+def root(request: Request):
+    # Landing page show pannunga
+    return templates.TemplateResponse(request, "index.html")
 
 
 @router.get("/login", response_class=HTMLResponse)
@@ -21,6 +22,11 @@ def signup_page(request: Request):
     return templates.TemplateResponse(request, "signup.html")
 
 
+@router.get("/forgot-password", response_class=HTMLResponse)
+def forgot_password_page(request: Request):
+    return templates.TemplateResponse(request, "forgot_password.html")
+
+
 @router.get("/dashboard", response_class=HTMLResponse)
 def dashboard(request: Request):
     return templates.TemplateResponse(request, "dashboard.html")
@@ -31,6 +37,3 @@ def job_detail(request: Request, job_key: str):
     return templates.TemplateResponse(
         request, "job_detail.html", {"job_key": job_key}
     )
-@router.get("/forgot-password", response_class=HTMLResponse)
-def forgot_password_page(request: Request):
-    return templates.TemplateResponse(request, "forgot_password.html")

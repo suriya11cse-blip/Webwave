@@ -1,10 +1,92 @@
-// ========== STATE ==========
+// ========== 🎯 CHATBOT INJECTION (only when logged in) ==========
+function injectChatbot() {
+  // Check if already injected
+  if (document.getElementById('chatToggle')) return;
+
+  // Check if logged in
+  if (!localStorage.getItem('token')) return;
+
+  // Inject chatbot HTML
+  var chatbotHTML = `
+    <div id="chatToggle" onclick="toggleChat()">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+        <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+      </svg>
+    </div>
+
+    <div id="chatBox" class="chat-hidden">
+      <div class="chat-header">
+        <div class="chat-title">
+          <span class="chat-dot"></span> WEBWAVE AI
+        </div>
+        <div class="chat-actions">
+          <span class="lang-btn" id="langBtn" onclick="cycleLanguage()" title="Change language">🇬🇧 EN</span>
+          <span class="voice-toggle" id="voiceToggle" onclick="toggleVoice()" title="Voice">🔊</span>
+          <span class="chat-close" onclick="toggleChat()">✖</span>
+        </div>
+      </div>
+      <div id="chatMessages">
+        <div class="bubble bot">Vanakkam! 🙏 Naan WEBWAVE AI. Tamil, English, Hindi — enna language-layum pesalam. Jobs, courses pathi kelunga!</div>
+      </div>
+      <div class="chat-input-wrap">
+        <button class="mic-btn" id="micBtn" onclick="startVoiceInput()" title="Voice input">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+            <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+          </svg>
+        </button>
+        <input id="chatInput" placeholder="Type or speak..." onkeypress="if(event.key==='Enter')sendMsg()">
+        <button id="sendBtn" onclick="sendMsg()" title="Send">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  `;
+
+  // Append to body
+  var container = document.createElement('div');
+  container.innerHTML = chatbotHTML;
+  document.body.appendChild(container);
+}
+
+// Auto-inject on page load
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(injectChatbot, 100);
+});
+
+// ========== VOICE STATE ==========
 var voiceOutputEnabled = true;
 var recognition = null;
 var isListening = false;
-var isRecording = false;
-var recordStartTime = 0;
-var recordTimer = null;
+
+// ========== LANGUAGE CYCLE ==========
+var LANGUAGES = [
+  { code: 'en-IN', label: 'English', flag: '🇬🇧' },
+  { code: 'ta-IN', label: 'Tamil', flag: '🇮🇳' },
+  { code: 'hi-IN', label: 'Hindi', flag: '🇮🇳' }
+];
+var currentLangIndex = 0;
+
+function cycleLanguage() {
+  currentLangIndex = (currentLangIndex + 1) % LANGUAGES.length;
+  var lang = LANGUAGES[currentLangIndex];
+  var btn = document.getElementById('langBtn');
+  if (btn) {
+    btn.innerText = lang.flag + ' ' + lang.code.split('-')[0].toUpperCase();
+    btn.title = 'Voice language: ' + lang.label;
+  }
+  var toast = document.createElement('div');
+  toast.className = 'lang-toast';
+  toast.innerText = '🌐 ' + lang.label;
+  document.body.appendChild(toast);
+  setTimeout(function() { toast.remove(); }, 1500);
+}
+
+function getCurrentLanguage() {
+  return LANGUAGES[currentLangIndex].code;
+}
 
 // ========== CHAT TOGGLE ==========
 function toggleChat() {
@@ -22,7 +104,7 @@ function toggleChat() {
   }
 }
 
-// ========== VOICE OUTPUT TOGGLE ==========
+// ========== VOICE TOGGLE ==========
 function toggleVoice() {
   voiceOutputEnabled = !voiceOutputEnabled;
   var el = document.getElementById('voiceToggle');
@@ -32,20 +114,16 @@ function toggleVoice() {
   }
 }
 
-// ========== VOICE OUTPUT (TEXT-TO-SPEECH) ==========
+// ========== SPEAK ==========
 function speak(text) {
   if (!voiceOutputEnabled) return;
   if (!('speechSynthesis' in window)) return;
-
   window.speechSynthesis.cancel();
-
   var cleanText = text.replace(/[\u{1F300}-\u{1FAFF}]/gu, '').trim();
   if (!cleanText) return;
-
   var utterance = new SpeechSynthesisUtterance(cleanText);
   var lang = detectLanguage(text);
   var voices = window.speechSynthesis.getVoices();
-
   if (lang === 'ta') {
     var v = voices.find(function(x) { return x.lang === 'ta-IN'; }) ||
             voices.find(function(x) { return x.lang.startsWith('ta'); });
@@ -58,146 +136,81 @@ function speak(text) {
     utterance.lang = 'hi-IN';
   } else {
     var v = voices.find(function(x) { return x.lang === 'en-IN'; }) ||
-            voices.find(function(x) { return x.lang === 'en-US'; }) ||
             voices.find(function(x) { return x.lang.startsWith('en'); });
     if (v) utterance.voice = v;
     utterance.lang = 'en-IN';
   }
-
   utterance.rate = 0.95;
   utterance.pitch = 1.0;
   utterance.volume = 1.0;
-
-  setTimeout(function() {
-    window.speechSynthesis.speak(utterance);
-  }, 100);
+  setTimeout(function() { window.speechSynthesis.speak(utterance); }, 100);
 }
 
-// ========== LANGUAGE DETECT ==========
 function detectLanguage(text) {
   if (/[\u0B80-\u0BFF]/.test(text)) return 'ta';
   if (/[\u0900-\u097F]/.test(text)) return 'hi';
   return 'en';
 }
 
-// ========== 🎤 WHATSAPP-STYLE VOICE INPUT ==========
+// ========== VOICE INPUT ==========
 function startVoiceInput() {
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) {
-    alert('Voice input browser support illa.\n\nPlease use Google Chrome or Microsoft Edge.');
+    alert('Voice input browser support illa. Use Chrome or Edge.');
     return;
   }
-
-  // If already recording → stop
   if (isListening) {
-    stopRecording();
+    if (recognition) recognition.stop();
     return;
   }
-
-  // Start recording
   recognition = new SR();
   recognition.continuous = false;
   recognition.interimResults = true;
-  recognition.lang = 'ta-IN';
-  recognition.maxAlternatives = 1;
-
+  recognition.lang = getCurrentLanguage();
   var micBtn = document.getElementById('micBtn');
   var input = document.getElementById('chatInput');
-
   if (micBtn) micBtn.classList.add('listening');
   if (input) {
     input.placeholder = '🎤 Listening... pesunga';
     input.value = '';
+    input.classList.add('listening');
   }
-
   isListening = true;
-  isRecording = true;
-  recordStartTime = Date.now();
-
-  // Show recording timer
-  var seconds = 0;
-  recordTimer = setInterval(function() {
-    seconds++;
-    if (input) {
-      input.placeholder = '🎤 Recording... ' + seconds + 's (click mic to stop)';
-    }
-  }, 1000);
-
-  recognition.onstart = function() {
-    console.log('🎤 Recording started');
-  };
-
   recognition.onresult = function(event) {
     var transcript = '';
     for (var i = 0; i < event.results.length; i++) {
       transcript += event.results[i][0].transcript;
     }
-
-    if (input) {
-      input.value = transcript;
-    }
-
-    // If final result
+    if (input) input.value = transcript;
     if (event.results[event.results.length - 1].isFinal) {
-      console.log('📝 Final transcript:', transcript);
-      clearInterval(recordTimer);
       if (micBtn) micBtn.classList.remove('listening');
+      if (input) {
+        input.placeholder = 'Type or speak...';
+        input.classList.remove('listening');
+      }
       isListening = false;
-      isRecording = false;
-
-      if (input) input.placeholder = 'Type or speak...';
-
-      // Auto-send after short delay
       setTimeout(function() {
-        if (transcript.trim()) {
-          sendMsg();
-        }
+        if (transcript.trim()) sendMsg();
       }, 500);
     }
   };
-
   recognition.onerror = function(event) {
-    console.error('❌ Speech error:', event.error);
-    clearInterval(recordTimer);
     if (micBtn) micBtn.classList.remove('listening');
-    if (input) input.placeholder = 'Type or speak...';
-    isListening = false;
-    isRecording = false;
-
-    if (event.error === 'not-allowed') {
-      alert('❌ Microphone permission denied.\n\nBrowser-la mic allow pannunga:\n1. Address bar-la 🔒 click\n2. Microphone → Allow\n3. Refresh');
-    } else if (event.error === 'no-speech') {
-      console.log('No speech detected');
-    } else if (event.error === 'aborted') {
-      console.log('Recording aborted');
+    if (input) {
+      input.placeholder = 'Type or speak...';
+      input.classList.remove('listening');
     }
+    isListening = false;
   };
-
   recognition.onend = function() {
-    console.log('🎤 Recording ended');
-    clearInterval(recordTimer);
     if (micBtn) micBtn.classList.remove('listening');
-    if (input) input.placeholder = 'Type or speak...';
+    if (input) {
+      input.placeholder = 'Type or speak...';
+      input.classList.remove('listening');
+    }
     isListening = false;
-    isRecording = false;
   };
-
-  try {
-    recognition.start();
-  } catch (e) {
-    console.error('❌ Failed to start:', e);
-    clearInterval(recordTimer);
-    if (micBtn) micBtn.classList.remove('listening');
-    isListening = false;
-    isRecording = false;
-  }
-}
-
-function stopRecording() {
-  if (recognition && isListening) {
-    recognition.stop();
-  }
-  clearInterval(recordTimer);
+  try { recognition.start(); } catch (e) { isListening = false; }
 }
 
 // ========== SEND MESSAGE ==========
@@ -206,12 +219,9 @@ async function sendMsg() {
   if (!input) return;
   var msg = input.value.trim();
   if (!msg) return;
-
   addBubble(msg, 'user');
   input.value = '';
-
   var typingId = addTyping();
-
   try {
     var res = await fetch('/api/chat/', {
       method: 'POST',
@@ -228,7 +238,6 @@ async function sendMsg() {
   }
 }
 
-// ========== BUBBLE UI ==========
 function addBubble(text, who) {
   var box = document.getElementById('chatMessages');
   if (!box) return;
@@ -255,27 +264,6 @@ function removeTyping(id) {
   var el = document.getElementById(id);
   if (el) el.remove();
 }
-
-// ========== EVENT LISTENERS ==========
-document.addEventListener('DOMContentLoaded', function() {
-  var toggle = document.getElementById('chatToggle');
-  var closeBtn = document.querySelector('.chat-close');
-  var sendBtn = document.getElementById('sendBtn');
-  var micBtn = document.getElementById('micBtn');
-  var input = document.getElementById('chatInput');
-  var voiceToggle = document.getElementById('voiceToggle');
-
-  if (toggle) toggle.addEventListener('click', toggleChat);
-  if (closeBtn) closeBtn.addEventListener('click', toggleChat);
-  if (sendBtn) sendBtn.addEventListener('click', sendMsg);
-  if (micBtn) micBtn.addEventListener('click', startVoiceInput);
-  if (voiceToggle) voiceToggle.addEventListener('click', toggleVoice);
-  if (input) {
-    input.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') sendMsg();
-    });
-  }
-});
 
 // ========== PRELOAD VOICES ==========
 if ('speechSynthesis' in window) {
