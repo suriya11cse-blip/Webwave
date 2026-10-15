@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}WEBWAVE — Capture the flow of opportunities{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-content">
+    <div class="logo-hero">
+      <img src="/static/images/logo.png" alt="WEBWAVE" onerror="this.style.display='none'">
+    </div>
+    <div class="live-badge">
+      <span class="ldot"></span> Live Opportunities
+    </div>
+    <h1>WEB<span class="gtext">WAVE</span></h1>
+    <p class="hero-tagline">Capture the flow of opportunities</p>
+    <p class="hero-sub">
+      Customise your skills, build your career, own your destiny.
+    </p>
+    <div class="hero-buttons">
+      <a href="/signup" class="enter-btn">Get Started →</a>
+      <a href="/login" class="enter-btn ghost">Sign In</a>
+    </div>
+  </div>
+</section>
+
+<section class="features-section">
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="16 18 22 12 16 6"/>
+          <polyline points="8 6 2 12 8 18"/>
+        </svg>
+      </div>
+      <h3>Digital Skills</h3>
+      <p>Master in-demand tech skills and stay ahead in the digital world.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/>
+          <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
+          <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>
+          <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
+          <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+        </svg>
+      </div>
+      <h3>Creative Arts</h3>
+      <p>Unleash your creativity and turn your ideas into impactful creations.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 3h6v4l3 8v3a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-3l3-8V3z"/>
+          <line x1="9" y1="3" x2="15" y2="3"/>
+          <line x1="7" y1="14" x2="17" y2="14"/>
+        </svg>
+      </div>
+      <h3>Lab Divisions</h3>
+      <p>Explore, experiment and excel in modern lab environments with confidence.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+        </svg>
+      </div>
+      <h3>Part-Time Jobs</h3>
+      <p>Earn while you learn with flexible part-time job opportunities tailored for you.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="cta-content">
+    <h2>Learn Today, Lead Tomorrow</h2>
+    <p>Your future starts here.</p>
+    <a href="/signup" class="enter-btn">Join WEBWAVE →</a>
+  </div>
+</section>
+{% endblock %}
